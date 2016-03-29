@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE project>
+<project name="selective-workspace-copy-creator" default="all">
+
+	<dirname property="antfile.dir" file="${ant.file}" />
+	<property file="${antfile.dir}/build.properties" />
+
+	<macrodef name="copy-single">
+		<attribute name="project-name" />
+		<sequential>
+			<copy todir="${workspace.dest}/@{project-name}" verbose="true">
+				<fileset dir="${workspace.src}/@{project-name}" />
+			</copy>
+		</sequential>
+	</macrodef>
+
+	<scriptdef name="copy-selective" language="javascript" src="${antfile.dir}/js/copy-selective.js">
+		<attribute name="filter-path" />
+	</scriptdef>
+
+	<target name="clean">
+		<delete dir="${workspace.dest}" />
+	</target>
+
+	<target name="copy">
+		<mkdir dir="${workspace.dest}" />
+		<copy-selective filter-path="${filter.path}" />
+	</target>
+
+	<target name="all" depends="clean,copy" />
+
+</project>
